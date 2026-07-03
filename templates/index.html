@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Module</title>
+    <style>
+        :root {
+            --bg: #0b1018;
+            --bg-accent: #121a27;
+            --card: rgba(18, 26, 39, 0.82);
+            --card-solid: #141f30;
+            --border: #263449;
+            --text: #e6edf7;
+            --text-muted: #9caac0;
+            --text-faint: #7f8da3;
+            --brand: #8ca9ff;
+            --brand-strong: #6f90ff;
+            --success: #5ccf9f;
+            --warning: #ffca7a;
+            --danger: #ff8f99;
+            --highlight: #1b2940;
+            --glow: 0 0 0 1px rgba(140, 169, 255, 0.12), 0 18px 36px rgba(7, 10, 18, 0.55);
+            --control-bg: rgba(9, 15, 24, 0.66);
+            --control-bg-strong: rgba(9, 15, 24, 0.72);
+            --control-placeholder: #8fa0ba;
+            --surface-soft: rgba(8, 14, 22, 0.42);
+            --surface-muted: rgba(7, 13, 22, 0.62);
+            --surface-muted-2: rgba(7, 13, 22, 0.45);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background:
+                radial-gradient(1100px 680px at -10% -15%, #23324b 0%, rgba(35, 50, 75, 0) 55%),
+                radial-gradient(900px 620px at 110% -20%, #222d46 0%, rgba(34, 45, 70, 0) 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .header { margin-bottom: 28px; }
+        .header-bar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            border: 1px solid var(--border);
+            background: rgba(9, 15, 24, 0.72);
+            color: var(--text-muted);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--brand);
+            color: #dbe8ff;
+        }
+
+        .header h1 { font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+        .header p { font-size: 14px; color: var(--text-muted); }
+
+        /* ── Cards ─────────────────────────────────────────────────── */
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px 28px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: var(--glow);
+            backdrop-filter: blur(7px);
+        }
+
+        .section-heading {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-heading span {
+            background: rgba(129, 154, 226, 0.18);
+            color: #dbe8ff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        /* ── Shared fields grid ─────────────────────────────────────── */
+        .shared-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 6px; }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .optional {
+            font-weight: 400;
+            text-transform: none;
+            color: var(--text-faint);
+            font-size: 10px;
+        }
+
+        input[type="text"], input[type="number"], select {
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.15s;
+            font-family: inherit;
+            width: 100%;
+            background: var(--control-bg);
+            color: var(--text);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder {
+            color: var(--control-placeholder);
+            opacity: 1;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(140, 169, 255, 0.18);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238ea0bb' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+
+        .duration-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .duration-help {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .series-fields { display: none; }
+        .series-fields.hidden { display: none; }
+
+        .hidden { display: none; }
+
+        .lic-custom-input {
+            margin-top: 4px;
+            width: 100%;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* ── Season Selector Widget ───────────────────────────── */
+        .season-selector {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface-soft);
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .season-selector.hidden { display: none; }
+
+        .season-selector-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-muted);
+        }
+
+        .season-selector-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .season-row {
+            display: grid;
+            grid-template-columns: 28px 1fr 130px;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-bottom: 1px solid rgba(38,52,73,0.5);
+            transition: background 0.12s;
+        }
+        .season-row:last-child { border-bottom: none; }
+        .season-row.held {
+            opacity: 0.45;
+            background: var(--surface-muted-2);
+        }
+        .season-row.active { background: rgba(111,144,255,0.05); }
+
+        .season-checkbox {
+            width: 16px; height: 16px;
+            accent-color: var(--brand-strong);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .season-row.held .season-checkbox { cursor: not-allowed; }
+
+        .season-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        .season-label-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+        .season-label-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .season-label-held {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--warning);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-left: 6px;
+        }
+
+        .season-ep-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .season-ep-input {
+            width: 56px;
+            text-align: center;
+            font-size: 12px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--control-bg);
+            color: var(--text);
+        }
+        .season-ep-input:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .season-ep-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .season-ep-max {
+            font-size: 10px;
+            color: var(--text-faint);
+        }
+
+        .season-context-banner {
+            font-size: 11.5px;
+            border-radius: 7px;
+            padding: 7px 11px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        .season-context-banner.incremental {
+            background: rgba(92, 207, 159, 0.08);
+            border: 1px solid rgba(92, 207, 159, 0.25);
+            color: #5ccf9f;
+        }
+        .season-context-banner.partial {
+            background: rgba(255, 202, 122, 0.08);
+            border: 1px solid rgba(255, 202, 122, 0.25);
+            color: #ffca7a;
+        }
+
+        .duration-field.hidden {
+            display: none;
+        }
+
+        .imdb-inline {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-mini {
+            border: 1px solid var(--border);
+            background: var(--control-bg-strong);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-mini:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ── Deal rows table ────────────────────────────────────────── */
+        .deals-wrapper { overflow-x: auto; }
+
+        .deals-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 760px;
+        }
+
+        .deals-table th {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            padding: 0 8px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .deals-table th:first-child { width: 36px; }
+        .deals-table th:last-child { width: 40px; }
+
+        .deal-row td {
+            padding: 6px 8px;
+            vertical-align: middle;
+        }
+
+        .deal-row td:first-child {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-faint);
+            text-align: center;
+        }
+
+        .deal-row input[type="text"],
+        .deal-row select {
+            font-size: 13px;
+            padding: 7px 10px;
+        }
+
+        .deal-row select { padding-right: 26px; }
+
+        /* platform multi-chips inside table */
+        .platform-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            min-width: 180px;
+        }
+
+        .p-chip {
+            padding: 3px 9px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            transition: all 0.12s;
+            color: var(--text-muted);
+        }
+
+        .p-chip.active {
+            background: linear-gradient(120deg, #6f90ff, #8ca9ff);
+            color: #0c1422;
+            border-color: #8ca9ff;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 4px;
+            transition: color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remove:hover { color: var(--danger); }
+
+        .divider {
+            border: none;
+            border-top: 1px solid rgba(140, 169, 255, 0.12);
+            margin: 20px 0;
+        }
+
+        /* ── Buttons ────────────────────────────────────────────────── */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-add {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1.5px dashed var(--border);
+            border-radius: 8px;
+            background: var(--surface-soft);
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .btn-add:hover { border-color: var(--brand); color: #cddcff; }
+        .btn-add:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .btn-compare {
+            margin-left: auto;
+            padding: 10px 28px;
+            background: linear-gradient(125deg, #6288ff, #8ea9ff);
+            color: #0a1220;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.15s;
+        }
+
+        .btn-compare:hover { opacity: 1; filter: brightness(1.06); }
+        .btn-compare:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-ghost {
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            background: var(--control-bg-strong);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--brand);
+            color: #dbe8ff;
+        }
+
+        .btn-row.sticky-actions {
+            position: sticky;
+            bottom: 10px;
+            z-index: 20;
+            background: rgba(12, 19, 30, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            backdrop-filter: blur(6px);
+        }
+
+        .quick-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .field-error {
+            color: var(--danger);
+            font-size: 11px;
+            line-height: 1.35;
+            margin-top: 3px;
+            min-height: 14px;
+        }
+
+        .input-error {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 2px rgba(255, 143, 153, 0.14);
+        }
+
+        .error-banner {
+            display: none;
+            background: rgba(76, 20, 28, 0.45);
+            color: #ffc2c8;
+            border: 1px solid rgba(255, 143, 153, 0.35);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .panel-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .panel-tools .tools-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Results comparison grid ─────────────────────────────────── */
+        .results-section { display: none; }
+        .results-section.visible { display: block; }
+
+        .results-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        /* dynamically set via JS based on deal count */
+
+        .result-card {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--glow);
+        }
+
+        .result-card-header {
+            background: linear-gradient(120deg, rgba(120, 145, 220, 0.3), rgba(86, 112, 184, 0.24));
+            color: #edf3ff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-card-header .deal-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            opacity: 0.75;
+        }
+
+        .result-card-header .deal-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .confidence-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+
+        .confidence-badge.High { background: rgba(92, 207, 159, 0.16); color: #8be8bd; border-color: rgba(92, 207, 159, 0.4); }
+        .confidence-badge.Medium { background: rgba(255, 202, 122, 0.14); color: #ffd89b; border-color: rgba(255, 202, 122, 0.38); }
+        .confidence-badge.Low { background: rgba(255, 143, 153, 0.14); color: #ffb2b9; border-color: rgba(255, 143, 153, 0.34); }
+
+        .result-card-body { padding: 16px; }
+
+        .result-params {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .param-tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: rgba(110, 139, 222, 0.12);
+            border-radius: 4px;
+            color: #d8e3f5;
+            border: 1px solid rgba(142, 169, 219, 0.2);
+        }
+
+        .price-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .price-block {
+            background: var(--surface-muted);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(109, 132, 176, 0.23);
+        }
+
+        .price-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-faint);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .price-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #edf3ff;
+            line-height: 1.4;
+        }
+
+        .reasoning-block {
+            background: var(--surface-muted-2);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            border: 1px solid rgba(109, 132, 176, 0.23);
+        }
+
+        .reasoning-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-faint);
+            margin-bottom: 4px;
+        }
+
+        .price-label.price-fee::before { content: "◉"; color: #90b0ff; font-size: 10px; }
+        .price-label.price-mg::before { content: "◆"; color: #b8c8ff; font-size: 10px; }
+        .price-label.price-rev::before { content: "▣"; color: #8cd5ff; font-size: 10px; }
+
+        .result-card .price-value.value-fade {
+            animation: cinematicPulse 280ms ease-out;
+        }
+
+        @keyframes cinematicPulse {
+            from { opacity: 0; transform: translateY(5px) scale(0.985); filter: blur(1.2px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        /* Loading skeleton */
+        .result-card.loading .result-card-body {
+            padding: 24px 16px;
+            text-align: center;
+            color: var(--text-faint);
+            font-size: 13px;
+        }
+
+        .result-card.error .result-card-body {
+            padding: 16px;
+            color: var(--danger);
+            font-size: 13px;
+        }
+
+        /* Best deal highlight */
+        .result-card.best-deal {
+            border: 1px solid #8ba9ff;
+            box-shadow: 0 0 0 1px rgba(139, 169, 255, 0.35), 0 20px 40px rgba(5, 11, 21, 0.65);
+        }
+
+        .best-badge {
+            font-size: 10px;
+            font-weight: 700;
+            background: linear-gradient(130deg, #6f90ff, #9cb6ff);
+            color: #0c1422;
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ── Export memo button ──────────────────────────────────────── */
+        .btn-export-memo {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            background: rgba(111, 144, 255, 0.1);
+            color: var(--brand);
+            border: 1px solid rgba(111, 144, 255, 0.28);
+            border-radius: 7px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: background 0.14s, border-color 0.14s, transform 0.1s;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+        .btn-export-memo:hover {
+            background: rgba(111, 144, 255, 0.2);
+            border-color: var(--brand);
+            transform: translateY(-1px);
+        }
+        .btn-export-memo:active { transform: translateY(0); }
+        .btn-export-memo:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-export-memo svg {
+            width: 12px; height: 12px;
+            flex-shrink: 0;
+        }
+
+        /* ── Summary comparison table ────────────────────────────────── */
+        .summary-table-wrap { overflow-x: auto; margin-top: 20px; border: 1px solid var(--border); border-radius: 12px; background: rgba(9, 15, 24, 0.45); }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(140, 169, 255, 0.14);
+        }
+
+        .summary-table th {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #b9c8dc;
+            background: rgba(126, 148, 206, 0.12);
+        }
+
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table tr.highlight td { background: rgba(92, 126, 219, 0.18); font-weight: 600; }
+
+        /* ── Mobile ─────────────────────────────────────────────────── */
+        @media (max-width: 600px) {
+            .shared-grid { grid-template-columns: 1fr; }
+            .price-row { grid-template-columns: 1fr; }
+            body { padding: 20px 12px; }
+            .header-bar { align-items: stretch; flex-direction: column; }
+            .theme-toggle { align-self: flex-start; }
+        }
+
+        body[data-theme="light"] {
+            --bg: #edf2fb;
+            --bg-accent: #f9fbff;
+            --card: rgba(255, 255, 255, 0.92);
+            --card-solid: #ffffff;
+            --border: #d4deee;
+            --text: #131e31;
+            --text-muted: #3f4f6a;
+            --text-faint: #5f7090;
+            --brand: #4f76ff;
+            --brand-strong: #3f67f5;
+            --success: #159e6a;
+            --warning: #bd7a13;
+            --danger: #d14b59;
+            --highlight: #dfe9ff;
+            --glow: 0 0 0 1px rgba(79, 118, 255, 0.08), 0 14px 30px rgba(47, 74, 129, 0.12);
+            --control-bg: #fdfefe;
+            --control-bg-strong: #f8fbff;
+            --control-placeholder: #6d7f9c;
+            --surface-soft: #f3f7ff;
+            --surface-muted: #eef4ff;
+            --surface-muted-2: #f4f8ff;
+        }
+
+        body[data-theme="light"] .result-card-header {
+            color: #1a2740;
+            background: linear-gradient(120deg, rgba(132, 161, 242, 0.25), rgba(114, 146, 233, 0.2));
+        }
+
+        body[data-theme="light"] .header p,
+        body[data-theme="light"] .duration-help,
+        body[data-theme="light"] .quick-hint,
+        body[data-theme="light"] .status-text {
+            color: #435575;
+        }
+
+        body[data-theme="light"] .theme-toggle,
+        body[data-theme="light"] .btn-mini,
+        body[data-theme="light"] .btn-ghost {
+            background: #f6f9ff;
+            color: #2f3f5b;
+            border-color: #ccd8ee;
+        }
+
+        body[data-theme="light"] .btn-add {
+            color: #3f4f6a;
+            border-color: #c9d7ef;
+            background: #f6f9ff;
+        }
+
+        body[data-theme="light"] .btn-row.sticky-actions {
+            background: rgba(250, 252, 255, 0.96);
+            border-color: #d8e2f2;
+        }
+
+        body[data-theme="light"] input[type="text"],
+        body[data-theme="light"] input[type="number"],
+        body[data-theme="light"] select {
+            color: #1a2a43;
+            border-color: #ccd9ef;
+        }
+
+        body[data-theme="light"] input[type="text"]::placeholder,
+        body[data-theme="light"] input[type="number"]::placeholder {
+            color: #6d7f9c;
+        }
+
+        body[data-theme="light"] .series-fields,
+        body[data-theme="light"] .price-block,
+        body[data-theme="light"] .reasoning-block {
+            border-color: #d2def2;
+        }
+
+        body[data-theme="light"] .price-value {
+            color: #12243c;
+        }
+
+        body[data-theme="light"] .price-label,
+        body[data-theme="light"] .reasoning-label {
+            color: #4b5f80;
+        }
+
+        body[data-theme="light"] .summary-table th {
+            color: #3f5276;
+            background: #edf3ff;
+        }
+
+        body[data-theme="light"] .summary-table td {
+            color: #243854;
+        }
+
+        body[data-theme="light"] .field-error {
+            color: #b13a47;
+        }
+
+        body[data-theme="light"] .section-heading span {
+            background: #e8eeff;
+            color: #3f5dc4;
+        }
+
+        body[data-theme="light"] select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e7d96' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        }
+
+        body[data-theme="light"] .param-tag {
+            background: #edf3ff;
+            border-color: #d9e4ff;
+            color: #36508f;
+        }
+
+        body[data-theme="light"] .summary-table-wrap {
+            background: #ffffff;
+        }
+
+        body[data-theme="light"] .best-badge {
+            color: #f8fbff;
+            background: linear-gradient(130deg, #4f76ff, #6f90ff);
+        }
+        body[data-theme="light"] .btn-export-memo {
+            background: rgba(79, 118, 255, 0.07);
+            color: #3a60e8;
+            border-color: rgba(79, 118, 255, 0.22);
+        }
+        body[data-theme="light"] .btn-export-memo:hover {
+            background: rgba(79, 118, 255, 0.15);
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-bar">
+            <div>
+                <h1>Film Licensing Price Estimator</h1>
+                <p>Compare multiple deal scenarios side by side — powered by AI</p>
+            </div>
+            <button type="button" class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+                Light mode
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Shared fields ───────────────────────────────────────────── -->
+    <div class="card">
+        <div class="section-heading">Title & metadata <span>shared across all deals</span></div>
+        <div class="shared-grid">
+            <div class="field">
+                <label>Title name</label>
+                <input type="text" id="title" placeholder="e.g. Oppenheimer" />
+                <div class="field-error" id="error-title"></div>
+            </div>
+            <div class="field duration-field" id="runtime-field">
+                <label>Runtime <span class="optional">(optional for series)</span></label>
+                <div class="duration-input-group">
+                    <input type="number" id="duration_hours" min="0" step="1" placeholder="Hours" />
+                    <input type="number" id="duration_minutes" min="0" max="59" step="1" placeholder="Minutes" />
+                </div>
+                <div class="duration-help" id="runtime-help">Enter runtime as hours and minutes (e.g. 2h 30m).</div>
+                <div class="field-error" id="error-runtime"></div>
+            </div>
+            <div class="field">
+                <label>Content type</label>
+                <select id="content_type" onchange="toggleContentType()">
+                    <option value="movie" selected>Movie</option>
+                    <option value="series">Series</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>IMDB link</label>
+                <div class="imdb-inline">
+                    <input type="text" id="imdb_link" placeholder="https://imdb.com/title/tt…" />
+                    <button type="button" class="btn-mini" id="btn-imdb-autofill" onclick="autoFillFromImdb()">Auto-fill</button>
+                </div>
+                <div class="duration-help" id="imdb-status">Paste IMDb link, then auto-fill details.</div>
+                <div class="field-error" id="error-imdb_link"></div>
+            </div>
+            <div class="field">
+                <label>TMDB link <span class="optional">(optional)</span></label>
+                <input type="text" id="tmdb_link" placeholder="https://themoviedb.org/movie/…" />
+            </div>
+            <div class="field full-width">
+                <label>Series package <span class="optional">(for series only)</span></label>
+                <!-- hidden legacy inputs kept for backend compat -->
+                <input type="hidden" id="season_count" />
+                <input type="hidden" id="episode_count" />
+                <!-- Season selector widget — rendered dynamically by buildSeasonSelector() -->
+                <div id="season-selector" class="season-selector hidden"></div>
+                <div class="duration-help" id="series-status">Auto-fill from IMDb to load season data.</div>
+                <div class="field-error" id="error-series"></div>
+            </div>
+        </div>
+        <div class="error-banner" id="form-error-banner"></div>
+    </div>
+
+    <!-- ── Deal comparison table ────────────────────────────────────── -->
+    <div class="card">
+        <div class="section-heading">Deal scenarios <span id="deal-count-label">1 deal</span></div>
+        <div class="deals-wrapper">
+            <table class="deals-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Region</th>
+                        <th>Rights type</th>
+                        <th>Language rights</th>
+                        <th>License duration</th>
+                        <th>Platforms</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="deals-body"></tbody>
+            </table>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="btn-row sticky-actions">
+            <button class="btn-add" id="btn-add" onclick="addDeal()">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                Add deal scenario
+            </button>
+            <span style="font-size:12px; color:#aaa;" id="deal-limit-msg"></span>
+            <button class="btn-compare" id="btn-compare" onclick="compareAll()">Compare deals →</button>
+            <span class="quick-hint">Shortcuts: Ctrl/Cmd+Enter = Compute, Alt+N = Add deal</span>
+        </div>
+    </div>
+
+    <!-- ── Results ──────────────────────────────────────────────────── -->
+    <div class="results-section" id="results-section">
+        <div class="card" style="padding-bottom:8px;">
+            <div class="panel-tools">
+                <div class="section-heading" style="margin-bottom:0;">Comparison results</div>
+                <div class="tools-right">
+                    <span class="quick-hint"><span class="status-dot"></span>Top seller value = highest floor price</span>
+                </div>
+            </div>
+            <div class="results-grid" id="results-grid"></div>
+            <div class="summary-table-wrap" id="summary-wrap" style="display:none;">
+                <hr class="divider" style="margin-top:20px;" />
+                <div class="section-heading">Summary table</div>
+                <div class="summary-table-wrap">
+                    <table class="summary-table" id="summary-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ── State ───────────────────────────────────────────────────────────────
+const MAX_DEALS = 5;
+
+const PLATFORMS = ["YouTube", "OTT / Streaming", "Pay TV", "Free-to-Air TV", "FAST channels"];
+const RIGHTS_OPTIONS = ["Exclusive", "Non-Exclusive"];
+const LANGUAGE_OPTIONS = ["Original only", "Original + Dubbed", "Original + Dubbed + Subtitled"];
+const LICENSE_OPTIONS = ["6 months", "1 year", "2 years", "3 years", "5 years", "Perpetual / Permanent", "Custom"];
+let COUNTRY_NAME_TO_CODE = {};
+let RELEASED_EPISODE_CAP = null;
+// Season selector state — populated from IMDb and user interaction
+// { seasonNum: { total: N, selected: bool, customEps: N|null, held: bool } }
+let SEASON_STATE = {};
+const DEAL_RESULT_CACHE = new Map();
+let LAST_RESULTS = [];          // [{deal, data}] — populated after each compute run
+let LAST_SHARED_INPUTS = null;  // shared inputs from last run
+
+function setFieldError(id, message, inputIds = []) {
+    const node = document.getElementById(`error-${id}`);
+    if (node) node.textContent = message || "";
+    inputIds.forEach((inputId) => {
+        const el = document.getElementById(inputId);
+        if (el) el.classList.toggle("input-error", !!message);
+    });
+}
+
+function clearFormErrors() {
+    ["title", "runtime", "imdb_link", "series"].forEach((key) => setFieldError(key, ""));
+    ["title", "imdb_link", "duration_hours", "duration_minutes", "season_count", "episode_count"]
+        .forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove("input-error");
+        });
+    const banner = document.getElementById("form-error-banner");
+    banner.style.display = "none";
+    banner.textContent = "";
+}
+
+function setFormError(message) {
+    const banner = document.getElementById("form-error-banner");
+    banner.textContent = message;
+    banner.style.display = "block";
+}
+
+async function loadCountries() {
+    try {
+        const res = await fetch("/countries");
+        if (!res.ok) return;
+        const data = await res.json();
+        const datalist = document.getElementById("country-options");
+        datalist.innerHTML = (data.countries || [])
+            .map(c => `<option value="${c.name}" data-code="${c.code}"></option>`)
+            .join("");
+        COUNTRY_NAME_TO_CODE = {};
+        (data.countries || []).forEach(c => {
+            COUNTRY_NAME_TO_CODE[c.name.toLowerCase()] = c.code;
+        });
+    } catch (e) {
+        console.warn("Could not load countries list");
+    }
+}
+
+// ── Build a deal row ─────────────────────────────────────────────────────
+function addDeal() {
+    const rows = getDealRows();
+    if (rows.length >= MAX_DEALS) return;
+    const nextIndex = rows.length + 1;
+
+    const tbody = document.getElementById("deals-body");
+    const row = document.createElement("tr");
+    row.className = "deal-row";
+    row.id = `deal-${nextIndex}`;
+
+    // Platform chips HTML
+    const chipsHtml = PLATFORMS.map(p =>
+        `<span class="p-chip" data-platform="${p}" onclick="togglePlatform(this)">${p}</span>`
+    ).join("");
+
+    // Rights options
+    const rightsHtml = RIGHTS_OPTIONS.map(r =>
+        `<option value="${r}">${r}</option>`
+    ).join("");
+
+    // Language options
+    const langHtml = LANGUAGE_OPTIONS.map(l =>
+        `<option value="${l}">${l}</option>`
+    ).join("");
+
+    // License options
+    const licHtml = LICENSE_OPTIONS.map(l =>
+        `<option value="${l}">${l}</option>`
+    ).join("");
+
+    row.innerHTML = `
+        <td>${nextIndex}</td>
+        <td><input type="text" class="region-input" list="country-options" placeholder="Search country (e.g. India)" /></td>
+        <td>
+            <select class="rights-select">
+                ${rightsHtml}
+            </select>
+        </td>
+        <td>
+            <select class="lang-select">
+                ${langHtml}
+            </select>
+        </td>
+        <td>
+            <select class="lic-select" onchange="handleLicenseOptionChange(this)">
+                ${licHtml}
+            </select>
+            <input type="text" class="lic-custom-input hidden" placeholder="Enter custom duration (e.g. 18 months)" />
+        </td>
+        <td>
+            <div class="platform-chips">${chipsHtml}</div>
+        </td>
+        <td>
+            <button class="btn-remove" onclick="removeDeal(${nextIndex})" title="Remove">×</button>
+        </td>
+    `;
+
+    // Set default license to "1 year"
+    tbody.appendChild(row);
+    row.querySelector(".lic-select").value = "1 year";
+
+    syncDealRows();
+}
+
+function removeDeal(id) {
+    const row = document.getElementById(`deal-${id}`);
+    if (row) row.remove();
+    syncDealRows();
+}
+
+function togglePlatform(el) {
+    el.classList.toggle("active");
+}
+
+function getDealRows() {
+    return [...document.querySelectorAll(".deal-row")];
+}
+
+function syncDealRows() {
+    const rows = getDealRows();
+    rows.forEach((r, i) => {
+        const rowNumber = i + 1;
+        r.id = `deal-${rowNumber}`;
+        r.cells[0].textContent = rowNumber;
+        const removeBtn = r.querySelector(".btn-remove");
+        if (removeBtn) removeBtn.setAttribute("onclick", `removeDeal(${rowNumber})`);
+    });
+    updateDealLabel();
+    updateAddButton();
+}
+
+function handleLicenseOptionChange(selectElement) {
+    const row = selectElement.closest('.deal-row');
+    const customInput = row.querySelector('.lic-custom-input');
+    if (selectElement.value === 'Custom') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+    } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+    }
+}
+
+function updateDealLabel() {
+    const label = document.getElementById("deal-count-label");
+    const rows = getDealRows().length;
+    label.textContent = rows === 1 ? "1 deal" : `${rows} deals`;
+    updatePrimaryAction(rows);
+}
+
+function updateAddButton() {
+    const rows = getDealRows().length;
+    const btn = document.getElementById("btn-add");
+    const msg = document.getElementById("deal-limit-msg");
+    btn.disabled = rows >= MAX_DEALS;
+    msg.textContent = rows >= MAX_DEALS ? "Maximum 5 deals reached" : "";
+}
+
+function updatePrimaryAction(rows) {
+    const btn = document.getElementById("btn-compare");
+    btn.textContent = rows <= 1 ? "Compute pricing →" : "Compare deals →";
+}
+
+function getContentType() {
+    return document.getElementById("content_type").value;
+}
+
+function toggleContentType() {
+    const isSeries = getContentType() === "series";
+    const selector = document.getElementById("season-selector");
+    const runtimeField = document.getElementById("runtime-field");
+    const runtimeHelp = document.getElementById("runtime-help");
+    runtimeField.classList.toggle("hidden", isSeries);
+    runtimeHelp.textContent = isSeries
+        ? "Runtime is optional for series. Leave blank if unknown."
+        : "Enter runtime as hours and minutes (e.g. 2h 30m).";
+    if (!isSeries) {
+        RELEASED_EPISODE_CAP = null;
+        SEASON_STATE = {};
+        selector.classList.add("hidden");
+        selector.innerHTML = "";
+        document.getElementById("series-status").textContent = "Auto-fill from IMDb to load season data.";
+    }
+}
+
+// toggleEpisodeScope removed — replaced by season selector widget
+
+function setRuntimeFromMinutes(totalMinutes) {
+    if (!totalMinutes || totalMinutes <= 0) return;
+    const h = document.getElementById("duration_hours");
+    const m = document.getElementById("duration_minutes");
+    h.value = String(Math.floor(totalMinutes / 60));
+    m.value = String(totalMinutes % 60);
+    normalizeDurationInputs();
+}
+
+function buildSeasonSelector(meta) {
+    if (!meta || meta.content_type !== "series") return;
+
+    const breakdown = meta.season_episode_counts || {};
+    const totalSeasons = meta.total_seasons || Object.keys(breakdown).length;
+    if (totalSeasons === 0) return;
+
+    // Build initial SEASON_STATE — all seasons selected by default, not held
+    SEASON_STATE = {};
+    for (let s = 1; s <= totalSeasons; s++) {
+        SEASON_STATE[s] = {
+            total: breakdown[s] || null,
+            selected: true,
+            customEps: null,
+            held: false,
+        };
+    }
+
+    RELEASED_EPISODE_CAP = meta.released_episode_count || null;
+    document.getElementById("season_count").value = String(totalSeasons);
+    renderSeasonSelector(totalSeasons);
+
+    const statusParts = Object.keys(breakdown).sort((a,b)=>a-b)
+        .map(s => `S${s}:${breakdown[s]}ep`);
+    const statusStr = statusParts.length ? ` (${statusParts.join(", ")})` : "";
+    document.getElementById("series-status").textContent =
+        `${meta.released_episode_count || "?"} episodes across ${totalSeasons} seasons${statusStr}. Tick seasons to include in deal.`;
+}
+
+function renderSeasonSelector(totalSeasons) {
+    const el = document.getElementById("season-selector");
+    el.classList.remove("hidden");
+
+    const rows = [];
+    for (let s = 1; s <= totalSeasons; s++) {
+        const state = SEASON_STATE[s];
+        const epTotal = state.total ? state.total : "?";
+        const isHeld = state.held;
+        const isSelected = state.selected;
+        const customVal = state.customEps !== null ? state.customEps : "";
+        const heldBadge = isHeld ? `<span class="season-label-held">already held</span>` : "";
+        const rowClass = isHeld ? "season-row held" : (isSelected ? "season-row active" : "season-row");
+
+        rows.push(`
+        <div class="${rowClass}" id="season-row-${s}">
+            <input type="checkbox" class="season-checkbox" id="season-cb-${s}"
+                ${isSelected ? "checked" : ""} ${isHeld ? "disabled" : ""}
+                onchange="onSeasonToggle(${s}, this.checked)" />
+            <div class="season-label">
+                <span class="season-label-title">Season ${s}${heldBadge}</span>
+                <span class="season-label-sub">${state.total ? state.total + " episodes detected" : "episode count unknown"}</span>
+            </div>
+            <div class="season-ep-control">
+                <input type="number" class="season-ep-input" id="season-ep-${s}"
+                    min="1" max="${state.total || 999}" value="${customVal}"
+                    placeholder="${epTotal}"
+                    ${(!isSelected || isHeld) ? "disabled" : ""}
+                    title="Leave blank to use all ${epTotal} episodes"
+                    oninput="onEpisodeOverride(${s}, this.value)" />
+                <span class="season-ep-label">/ ${epTotal} ep</span>
+            </div>
+        </div>`);
+    }
+
+    el.innerHTML = `
+        <div class="season-selector-header">
+            <span>Seasons in this deal</span>
+            <span style="font-size:10px;font-weight:400;color:var(--text-faint)">Tick to include · enter episode count to override</span>
+        </div>
+        <div class="season-selector-body">${rows.join("")}</div>`;
+}
+
+function onSeasonToggle(seasonNum, checked) {
+    if (!SEASON_STATE[seasonNum]) return;
+    SEASON_STATE[seasonNum].selected = checked;
+    if (!checked) SEASON_STATE[seasonNum].customEps = null;
+    // Re-render just this row
+    const row = document.getElementById(`season-row-${seasonNum}`);
+    const epInput = document.getElementById(`season-ep-${seasonNum}`);
+    if (row) row.className = checked ? "season-row active" : "season-row";
+    if (epInput) {
+        epInput.disabled = !checked;
+        if (!checked) epInput.value = "";
+    }
+    updateHeldBadges();
+}
+
+function onEpisodeOverride(seasonNum, val) {
+    if (!SEASON_STATE[seasonNum]) return;
+    const n = parseInt(val, 10);
+    SEASON_STATE[seasonNum].customEps = (!isNaN(n) && n > 0) ? n : null;
+}
+
+function markSeasonsAsHeld(heldList) {
+    // Called when user types in already_acquired field (future hook)
+    heldList.forEach(s => {
+        if (SEASON_STATE[s]) {
+            SEASON_STATE[s].held = true;
+            SEASON_STATE[s].selected = true;
+            SEASON_STATE[s].customEps = null;
+            const cb = document.getElementById(`season-cb-${s}`);
+            const epInput = document.getElementById(`season-ep-${s}`);
+            const row = document.getElementById(`season-row-${s}`);
+            if (cb) { cb.checked = true; cb.disabled = true; }
+            if (epInput) epInput.disabled = true;
+            if (row) row.className = "season-row held";
+        }
+    });
+}
+
+function updateHeldBadges() {
+    // Re-evaluate "already held" state across all seasons (called after any change)
+    // Currently a no-op placeholder — held state is set at render time
+}
+
+function setSeriesDefaultsFromMetadata(meta) {
+    if (!meta || meta.content_type !== "series") return;
+    document.getElementById("content_type").value = "series";
+    toggleContentType();
+    buildSeasonSelector(meta);
+}
+
+async function autoFillFromImdb() {
+    const imdbLink = document.getElementById("imdb_link").value.trim();
+    if (!imdbLink) {
+        alert("Please paste an IMDb link first.");
+        return;
+    }
+    const btn = document.getElementById("btn-imdb-autofill");
+    const status = document.getElementById("imdb-status");
+    btn.disabled = true;
+    status.textContent = "Fetching title metadata...";
+    setFieldError("imdb_link", "", ["imdb_link"]);
+    try {
+        const res = await fetch(`/title-metadata?imdb_link=${encodeURIComponent(imdbLink)}`);
+        if (!res.ok) throw new Error("Unable to fetch IMDb metadata");
+        const meta = await res.json();
+        if (meta.title && !document.getElementById("title").value.trim()) {
+            document.getElementById("title").value = meta.title;
+        }
+        if (meta.runtime_minutes) {
+            setRuntimeFromMinutes(meta.runtime_minutes);
+        }
+        if (meta.content_type) {
+            document.getElementById("content_type").value = meta.content_type;
+            toggleContentType();
+        }
+        if (meta.content_type !== "series") {
+            RELEASED_EPISODE_CAP = null;
+        }
+        if (meta.tmdb_link && !document.getElementById("tmdb_link").value.trim()) {
+            document.getElementById("tmdb_link").value = meta.tmdb_link;
+        }
+        setSeriesDefaultsFromMetadata(meta);
+        status.textContent = "Auto-filled from IMDb. You can edit any field before computing.";
+    } catch (e) {
+        status.textContent = "Could not auto-fill from IMDb. Please enter details manually.";
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function getDurationValue() {
+    const hoursRaw = document.getElementById("duration_hours").value.trim();
+    const minutesRaw = document.getElementById("duration_minutes").value.trim();
+    let hours = Number(hoursRaw || 0);
+    let minutes = Number(minutesRaw || 0);
+
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return "";
+    if (hours < 0 || minutes < 0) return "";
+
+    if (minutes >= 60) {
+        hours += Math.floor(minutes / 60);
+        minutes = minutes % 60;
+    }
+
+    const parts = [];
+    if (hours > 0) parts.push(`${hours} hour${hours === 1 ? "" : "s"}`);
+    if (minutes > 0) parts.push(`${minutes} min`);
+    if (parts.length === 0) {
+        return getContentType() === "series" ? "Series package runtime unspecified" : "";
+    }
+    return parts.join(" ");
+}
+
+function getRuntimeMinutes() {
+    const hoursRaw = document.getElementById("duration_hours").value.trim();
+    const minutesRaw = document.getElementById("duration_minutes").value.trim();
+    const hours = Number(hoursRaw || 0);
+    const minutes = Number(minutesRaw || 0);
+    if (Number.isNaN(hours) || Number.isNaN(minutes) || hours < 0 || minutes < 0) return null;
+    const total = (hours * 60) + minutes;
+    return total > 0 ? total : null;
+}
+
+function getSeriesMetadata() {
+    if (getContentType() !== "series") {
+        return { season_count: null, episodes_per_season: null, episode_count: null,
+                 included_seasons: "", already_acquired_seasons: "",
+                 season_episode_counts: null, episodes_per_season_override: null };
+    }
+
+    const seasonCount = Number(document.getElementById("season_count").value || 0);
+    const selectedSeasons   = [];
+    const heldSeasons       = [];
+    const seasonEpCounts    = {};   // {s: N}  — IMDb detected counts
+    const episodeOverrides  = {};   // {s: N}  — user-specified custom counts
+
+    Object.entries(SEASON_STATE).forEach(([s, state]) => {
+        const sNum = Number(s);
+        if (state.total) seasonEpCounts[sNum] = state.total;
+        if (state.selected) selectedSeasons.push(sNum);
+        if (state.held) heldSeasons.push(sNum);
+        if (state.selected && !state.held && state.customEps !== null) {
+            episodeOverrides[sNum] = state.customEps;
+        }
+    });
+
+    selectedSeasons.sort((a,b) => a-b);
+    heldSeasons.sort((a,b) => a-b);
+
+    // Compute episode_count for backend: sum of included seasons' episodes
+    // Using override if provided, else IMDb count, else 0
+    const netNewSeasons = selectedSeasons.filter(s => !heldSeasons.includes(s));
+    let netEpisodes = 0;
+    netNewSeasons.forEach(s => {
+        netEpisodes += episodeOverrides[s] ?? seasonEpCounts[s] ?? 0;
+    });
+
+    // If everything selected and no held, use total released count
+    if (heldSeasons.length === 0 && netEpisodes === 0 && RELEASED_EPISODE_CAP) {
+        netEpisodes = RELEASED_EPISODE_CAP;
+    }
+
+    return {
+        season_count: seasonCount > 0 ? seasonCount : null,
+        episodes_per_season: null,
+        episode_count: netEpisodes > 0 ? netEpisodes : null,
+        included_seasons: selectedSeasons.join(","),
+        already_acquired_seasons: heldSeasons.join(","),
+        season_episode_counts: Object.keys(seasonEpCounts).length > 0 ? seasonEpCounts : null,
+        episode_overrides: Object.keys(episodeOverrides).length > 0 ? episodeOverrides : null,
+    };
+}
+
+function normalizeDurationInputs() {
+    const h = document.getElementById("duration_hours");
+    const m = document.getElementById("duration_minutes");
+    let hours = Number(h.value || 0);
+    let minutes = Number(m.value || 0);
+
+    if (Number.isNaN(hours) || hours < 0) hours = 0;
+    if (Number.isNaN(minutes) || minutes < 0) minutes = 0;
+
+    if (minutes >= 60) {
+        hours += Math.floor(minutes / 60);
+        minutes = minutes % 60;
+    }
+
+    h.value = hours > 0 ? String(hours) : "";
+    m.value = minutes > 0 ? String(minutes) : "";
+}
+
+// ── Collect deal data from a row ─────────────────────────────────────────
+function getDealData(row) {
+    const region = row.querySelector(".region-input").value.trim();
+    const country_code = COUNTRY_NAME_TO_CODE[region.toLowerCase()] || "";
+    const rights = row.querySelector(".rights-select").value;
+    const lang = row.querySelector(".lang-select").value;
+    let lic = row.querySelector(".lic-select").value;
+    if (lic === "Custom") {
+        const customInput = row.querySelector(".lic-custom-input").value.trim();
+        lic = customInput || "1 year"; // fallback if empty
+    }
+    const platforms = [...row.querySelectorAll(".p-chip.active")].map(c => c.dataset.platform);
+    return { region, country_code, rights_type: rights, language_rights: lang, license_duration: lic, platforms };
+}
+
+function buildEstimatePayload(shared, deal) {
+    return {
+        title: shared.title,
+        imdb_link: shared.imdb_link,
+        tmdb_link: shared.tmdb_link,
+        content_type: shared.content_type,
+        duration: shared.duration,
+        runtime_minutes: shared.runtime_minutes,
+        season_count: shared.series.season_count,
+        episodes_per_season: shared.series.episodes_per_season,
+        episode_count: shared.series.episode_count,
+        included_seasons: shared.series.included_seasons || "",
+        already_acquired_seasons: shared.series.already_acquired_seasons || "",
+        season_episode_counts: shared.series.season_episode_counts || null,
+        episode_overrides: shared.series.episode_overrides || null,
+        region: deal.region,
+        country_code: deal.country_code,
+        rights_type: deal.rights_type,
+        language_rights: deal.language_rights,
+        license_duration: deal.license_duration,
+        platforms: deal.platforms
+    };
+}
+
+// ── Validate shared fields ───────────────────────────────────────────────
+function validateShared() {
+    clearFormErrors();
+    const fields = { title: "title name", imdb_link: "IMDB link" };
+    for (const [id, label] of Object.entries(fields)) {
+        if (!document.getElementById(id).value.trim()) {
+            setFieldError(id, `Please fill in the ${label} field.`, [id]);
+            return false;
+        }
+    }
+
+    const duration = getDurationValue();
+    if (getContentType() !== "series" && !duration) {
+        setFieldError("runtime", "Please enter runtime in hours and/or minutes.", ["duration_hours", "duration_minutes"]);
+        return false;
+    }
+
+    if (getContentType() === "series") {
+        const series = getSeriesMetadata();
+        if (!series.season_count) {
+            setFieldError("series", "Please auto-fill from IMDb to load season data.", []);
+            return false;
+        }
+        const selectedCount = Object.values(SEASON_STATE).filter(s => s.selected).length;
+        if (selectedCount === 0) {
+            setFieldError("series", "Please select at least one season to include in this deal.", []);
+            return false;
+        }
+    }
+    return true;
+}
+
+function animateValueAppearance(scope) {
+    const values = scope.querySelectorAll(".price-value");
+    values.forEach((node, idx) => {
+        setTimeout(() => {
+            node.classList.remove("value-fade");
+            void node.offsetWidth;
+            node.classList.add("value-fade");
+        }, idx * 70);
+    });
+}
+
+const THEME_STORAGE_KEY = "pricing-module-theme";
+
+function applyTheme(theme) {
+    const resolved = theme === "light" ? "light" : "dark";
+    document.body.setAttribute("data-theme", resolved);
+    const btn = document.getElementById("theme-toggle-btn");
+    if (btn) {
+        btn.textContent = resolved === "dark" ? "Light mode" : "Dark mode";
+        btn.setAttribute("aria-label", `Switch to ${resolved === "dark" ? "light" : "dark"} mode`);
+    }
+}
+
+function initTheme() {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    applyTheme(stored === "light" ? "light" : "dark");
+}
+
+function toggleTheme() {
+    const current = document.body.getAttribute("data-theme") === "light" ? "light" : "dark";
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+}
+
+// ── Compare all deals ────────────────────────────────────────────────────
+async function compareAll() {
+    if (!validateShared()) return;
+
+    const rows = document.querySelectorAll(".deal-row");
+    if (rows.length === 0) {
+        setFormError("Please add at least one deal scenario.");
+        return;
+    }
+
+    // Validate each deal row
+    const deals = [];
+    for (let i = 0; i < rows.length; i++) {
+        const d = getDealData(rows[i]);
+        if (!d.region) { setFormError(`Deal ${i + 1}: Please enter a region.`); return; }
+        if (d.platforms.length === 0) { setFormError(`Deal ${i + 1}: Please select at least one platform.`); return; }
+        deals.push(d);
+    }
+
+    const sharedInputs = {
+        title: document.getElementById("title").value.trim(),
+        imdb_link: document.getElementById("imdb_link").value.trim(),
+        tmdb_link: document.getElementById("tmdb_link").value.trim(),
+        duration: getDurationValue(),
+        content_type: getContentType(),
+        runtime_minutes: getRuntimeMinutes(),
+        series: getSeriesMetadata()
+    };
+    const signatures = deals.map((deal) => JSON.stringify(buildEstimatePayload(sharedInputs, deal)));
+
+    const btn = document.getElementById("btn-compare");
+    btn.disabled = true;
+    btn.textContent = "Estimating...";
+
+    // Show results section with loading cards
+    const section = document.getElementById("results-section");
+    const grid = document.getElementById("results-grid");
+    section.classList.add("visible");
+    document.getElementById("summary-wrap").style.display = "none";
+
+    // Set grid columns
+    const cols = Math.min(deals.length, 3);
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    if (deals.length > 3) grid.style.gridTemplateColumns = `repeat(2, 1fr)`;
+    if (deals.length === 1) grid.style.gridTemplateColumns = `1fr`;
+
+    // Render loading placeholders
+    grid.innerHTML = deals.map((d, i) => `
+        <div class="result-card loading" id="result-card-${i}">
+            <div class="result-card-header">
+                <div>
+                    <div class="deal-label">Deal ${i + 1}</div>
+                    <div class="deal-title">${d.region} · ${d.rights_type}</div>
+                </div>
+            </div>
+            <div class="result-card-body">${DEAL_RESULT_CACHE.has(signatures[i]) ? "Reusing previous result…" : "Estimating…"}</div>
+        </div>
+    `).join("");
+
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Fire all requests in parallel
+    const results = await Promise.all(deals.map(async (deal, i) => {
+        const payload = buildEstimatePayload(sharedInputs, deal);
+        const signature = signatures[i];
+        const cached = DEAL_RESULT_CACHE.get(signature);
+        if (cached) {
+            return { ...cached, deal };
+        }
+        try {
+            const res = await fetch("/estimate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                let detail = "Server error";
+                try {
+                    const err = await res.json();
+                    detail = err.detail || detail;
+                } catch (_) {}
+                throw new Error(detail);
+            }
+            const fetched = { ok: true, data: await res.json() };
+            DEAL_RESULT_CACHE.set(signature, fetched);
+            return { ...fetched, deal };
+        } catch (e) {
+            return { ok: false, error: e.message, deal };
+        }
+    }));
+
+    // Find best deal (highest lower flat fee bound)
+    let bestIdx = -1;
+    let bestVal = -1;
+    results.forEach((r, i) => {
+        if (r.ok) {
+            const val = parseLower(r.data.pricing_estimate.flat_fee_range);
+            if (val > bestVal) { bestVal = val; bestIdx = i; }
+        }
+    });
+
+    // Render results
+    results.forEach((r, i) => {
+        const card = document.getElementById(`result-card-${i}`);
+        card.classList.remove("loading");
+        if (i === bestIdx && results.filter(x => x.ok).length > 1) {
+            card.classList.add("best-deal");
+        }
+
+        if (!r.ok) {
+            card.classList.add("error");
+            card.innerHTML = `
+                <div class="result-card-header">
+                    <div>
+                        <div class="deal-label">Deal ${i + 1}</div>
+                        <div class="deal-title">${r.deal.region} · ${r.deal.rights_type}</div>
+                    </div>
+                </div>
+                <div class="result-card-body">Error: ${r.error}. Please try again.</div>
+            `;
+            return;
+        }
+
+        const d = r.data;
+        const params = [r.deal.region, r.deal.rights_type, r.deal.language_rights, r.deal.license_duration, r.deal.platforms.join(" + ")];
+        const isBest = (i === bestIdx && results.filter(x => x.ok).length > 1);
+
+        card.innerHTML = `
+            <div class="result-card-header">
+                <div>
+                    <div class="deal-label">Deal ${i + 1}</div>
+                    <div class="deal-title">${r.deal.region} · ${r.deal.rights_type}</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    ${isBest ? '<span class="best-badge">Top seller value</span>' : ''}
+                    <span class="confidence-badge ${d.confidence_level}">${d.confidence_level}</span>
+                    <button class="btn-export-memo" id="memo-btn-${i}" onclick="exportMemo(${i})" title="Download deal memo PDF">
+                        <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 1v7M3 5.5l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Memo
+                    </button>
+                </div>
+            </div>
+            <div class="result-card-body">
+                <div class="result-params">
+                    ${params.map(p => `<span class="param-tag">${p}</span>`).join("")}
+                </div>
+                ${(() => {
+                    const sc = d.pricing_components?.season_context;
+                    if (!sc) return "";
+                    if (sc.mode === "incremental") {
+                        const newSeasons = sc.net_new_seasons?.map(s=>"S"+s).join(", ") || "new season(s)";
+                        return `<div class="season-context-banner incremental">&#9432; Incremental — ${newSeasons} · ${sc.net_new_episodes} episodes · seasons ${sc.already_acquired_seasons} already held.</div>`;
+                    }
+                    if (sc.mode === "partial") {
+                        return `<div class="season-context-banner partial">&#9432; Partial series — seasons ${sc.included_seasons} · ${sc.season_ratio_pct}% coverage · ${sc.net_new_episodes} episodes priced.</div>`;
+                    }
+                    return "";
+                })()}
+                <div class="price-row">
+                    <div class="price-block">
+                        <div class="price-label price-fee">Flat fee range</div>
+                        <div class="price-value">${d.pricing_estimate.flat_fee_range}</div>
+                    </div>
+                    <div class="price-block">
+                        <div class="price-label price-mg">Min guarantee</div>
+                        <div class="price-value">${d.pricing_estimate.minimum_guarantee}</div>
+                    </div>
+                    <div class="price-block">
+                        <div class="price-label price-rev">Revenue share</div>
+                        <div class="price-value">${d.pricing_estimate.revenue_share_range}</div>
+                    </div>
+                </div>
+                <div class="reasoning-block">
+                    <div class="reasoning-label">Reasoning</div>
+                    ${d.reasoning}
+                </div>
+            </div>
+        `;
+        animateValueAppearance(card);
+    });
+
+    // Build summary table if multiple deals
+    if (results.length > 1) {
+        buildSummaryTable(results, bestIdx);
+    }
+
+    // Store for memo export
+    LAST_SHARED_INPUTS = sharedInputs;
+    LAST_RESULTS = results.map((r, i) => ({
+        deal: buildEstimatePayload(sharedInputs, deals[i]),
+        data: r.ok ? r.data : null,
+    }));
+
+    btn.disabled = false;
+    updatePrimaryAction(deals.length);
+}
+
+// ── Export deal memo ─────────────────────────────────────────────────────
+async function exportMemo(idx) {
+    const entry = LAST_RESULTS[idx];
+    if (!entry || !entry.data) {
+        alert("No pricing result available for this deal. Please compute first.");
+        return;
+    }
+
+    const btn = document.getElementById(`memo-btn-${idx}`);
+    const originalHTML = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `
+            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:spin 0.8s linear infinite">
+                <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="14" stroke-dashoffset="7"/>
+            </svg>
+            Building…`;
+    }
+
+    try {
+        const res = await fetch("/export-memo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ deal: entry.deal, result: entry.data }),
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ detail: "Server error" }));
+            throw new Error(err.detail || "Server error");
+        }
+
+        const blob = await res.blob();
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement("a");
+        const cd   = res.headers.get("Content-Disposition") || "";
+        const fnMatch = cd.match(/filename="([^"]+)"/);
+        a.download = fnMatch ? fnMatch[1] : `deal_memo_${entry.data.title || "deal"}.pdf`;
+        a.href = url;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (e) {
+        alert(`Could not generate memo: ${e.message}`);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        }
+    }
+}
+
+// ── Summary table ────────────────────────────────────────────────────────
+function buildSummaryTable(results, bestIdx) {
+    const wrap = document.getElementById("summary-wrap");
+    const table = document.getElementById("summary-table");
+    wrap.style.display = "block";
+
+    const headers = ["", ...results.map((r, i) => `Deal ${i + 1}<br><small style="font-weight:400;text-transform:none;">${r.deal.region} · ${r.deal.rights_type}</small>`)];
+    const rows = [
+        { label: "Flat fee range",   key: r => r.ok ? r.data.pricing_estimate.flat_fee_range : "—" },
+        { label: "Min guarantee",    key: r => r.ok ? r.data.pricing_estimate.minimum_guarantee : "—" },
+        { label: "Revenue share",    key: r => r.ok ? r.data.pricing_estimate.revenue_share_range : "—" },
+        { label: "Confidence",       key: r => r.ok ? r.data.confidence_level : "—" },
+        { label: "License duration", key: r => r.deal.license_duration },
+        { label: "Language rights",  key: r => r.deal.language_rights },
+        { label: "Platforms",        key: r => r.deal.platforms.join(", ") },
+    ];
+
+    table.innerHTML = `
+        <thead>
+            <tr>${headers.map((h, i) => `<th${i === bestIdx + 1 ? ' style="background:rgba(92, 126, 219, 0.24);"' : ''}>${h}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+            ${rows.map(row => `
+                <tr>
+                    <td style="color:#9caac0;font-size:12px;white-space:nowrap;">${row.label}</td>
+                    ${results.map((r, i) => `<td${i === bestIdx ? ' style="background:rgba(92, 126, 219, 0.18);"' : ''}>${row.key(r)}</td>`).join("")}
+                </tr>
+            `).join("")}
+        </tbody>
+    `;
+}
+
+// ── Utility: parse lower bound of "USD X - USD Y" ───────────────────────
+function parseLower(s) {
+    if (!s || s === "Unavailable") return 0;
+    s = s.replace(/,/g, "").replace(/USD/gi, "").trim();
+    const first = s.split("-")[0].trim();
+    if (first.toUpperCase().includes("M")) return parseFloat(first) * 1_000_000;
+    if (first.toLowerCase().includes("k")) return parseFloat(first) * 1_000;
+    return parseFloat(first) || 0;
+}
+
+// ── Init: start with one deal row ────────────────────────────────────────
+initTheme();
+document.body.insertAdjacentHTML("beforeend", '<datalist id="country-options"></datalist>');
+loadCountries();
+document.getElementById("duration_hours").addEventListener("blur", normalizeDurationInputs);
+document.getElementById("duration_minutes").addEventListener("blur", normalizeDurationInputs);
+document.getElementById("imdb_link").addEventListener("blur", autoFillFromImdb);
+document.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        compareAll();
+    }
+    if (event.altKey && (event.key === "n" || event.key === "N")) {
+        event.preventDefault();
+        addDeal();
+    }
+});
+toggleContentType();
+// season selector initialised by buildSeasonSelector() after auto-fill
+addDeal();
+</script>
+</body>
+</html>
